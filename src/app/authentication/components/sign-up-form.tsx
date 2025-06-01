@@ -24,7 +24,11 @@ import {
 import { Input } from "@/components/ui/input";
 
 const registerSchema = z.object({
-  name: z.string().trim().min(4, { message: "Nome é obrigatório" }),
+  name: z
+    .string()
+    .trim()
+    .min(1, { message: "Nome é obrigatório" })
+    .min(4, { message: "Nome inválido" }),
   email: z
     .string()
     .trim()
