@@ -44,3 +44,6 @@ npx drizzle-kit push
 ```bash
 npx drizzle-kit studio
 ```
+
+tempo
+aula 2 - -1:29:13
