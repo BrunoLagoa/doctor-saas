@@ -1,0 +1,110 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Padrões Rigorosos de TypeScript
+
+## Regras Obrigatórias
+
+### 1. Proibição do @ts-ignore sem Explicação
+- **NUNCA** usar `@ts-ignore` sem um comentário explicativo detalhado
+- Sempre documentar o motivo específico da supressão
+- Incluir contexto sobre quando/como o problema será resolvido
+
+### 2. Tratamento de Warnings
+- **Todos os warnings devem ser tratados como erros**
+- Zero tolerância para warnings não resolvidos
+- Resolver problemas na origem, não suprimir
+
+### 3. Documentação Obrigatória
+Quando absolutamente necessário usar supressão de tipos, seguir este formato:
+
+```typescript
+// @ts-ignore: [MOTIVO ESPECÍFICO]
+// TODO: [PLANO PARA RESOLVER] - [PRAZO/CONTEXTO]
+codigo_problematico();
+```
+
+## Exemplos Corretos
+
+```typescript
+// @ts-ignore: Third-party library 'legacy-lib' has incorrect type definitions
+// TODO: Update to v2.0 when available (Q2 2024) or create custom .d.ts file
+const result = legacyLib.undefinedMethod();
+
+// @ts-ignore: Temporary workaround for Next.js SSR hydration mismatch
+// TODO: Refactor to use proper SSR pattern after Next.js 14 migration
+window.localStorage.setItem('theme', theme);
+```
+
+## Exemplos Proibidos
+
+```typescript
+// ❌ Sem explicação
+// @ts-ignore
+const data = api.getData();
+
+// ❌ Explicação vaga
+// @ts-ignore: fix later
+const result = processData();
+
+// ❌ Ignorando warning sem justificativa
+// @ts-ignore
+console.log('Debug info');
+```
+
+## Alternativas Preferidas
+
+### Em vez de @ts-ignore, use:
+
+1. **Type Assertions (quando seguro)**
+```typescript
+const element = document.getElementById('app') as HTMLElement;
+```
+
+2. **Type Guards**
+```typescript
+if (typeof data === 'string') {
+  // TypeScript agora sabe que data é string
+  return data.toUpperCase();
+}
+```
+
+3. **Unknown Type com Validação**
+```typescript
+const apiResponse: unknown = await fetch('/api');
+if (isValidResponse(apiResponse)) {
+  // Agora é type-safe
+  return apiResponse.data;
+}
+```
+
+4. **Custom Type Definitions**
+```typescript
+declare module 'legacy-library' {
+  export function undefinedMethod(): any;
+}
+```
+
+## Configuração ESLint
+Garantir que estas regras estejam ativas:
+- `@typescript-eslint/ban-ts-comment`
+- `@typescript-eslint/prefer-ts-expect-error`
+- Tratar warnings como erros no pipeline CI/CD
+
+## Processo de Review
+1. Todo `@ts-ignore` deve ser questionado em code review
+2. Deve haver justificativa técnica válida
+3. Deve incluir plano de resolução
+4. Revisor deve aprovar especificamente a supressão
+
+## Exceções Raras
+Usar `@ts-expect-error` em vez de `@ts-ignore` quando:
+- Testando cenários de erro esperados
+- Casos onde o erro é intencional e temporário
+
+```typescript
+// @ts-expect-error: Testing invalid input handling
+const result = processData(null);
+```

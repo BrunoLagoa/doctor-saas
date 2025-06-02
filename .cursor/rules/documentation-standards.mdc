@@ -1,0 +1,101 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Padrões de Documentação
+
+## Regras Obrigatórias
+
+### 1. Atualização do README
+- **Toda nova funcionalidade** deve ser explicada no [README.md](mdc:README.md)
+- Manter seções organizadas: instalação, uso, funcionalidades, configuração
+- Incluir exemplos práticos quando relevante
+- Atualizar screenshots ou diagramas quando a UI muda
+
+### 2. Manutenção do CHANGELOG
+- **Todas as mudanças** devem ser listadas no [CHANGELOG.md](mdc:CHANGELOG.md)
+- Seguir formato [Keep a Changelog](mdc:https:/keepachangelog.com)
+- Categorizar mudanças: Added, Changed, Deprecated, Removed, Fixed, Security
+- Incluir data e versão para cada release
+
+## Processo Obrigatório
+
+### Para Novas Funcionalidades (feat:)
+1. **Implementar a funcionalidade**
+2. **Atualizar [README.md](mdc:README.md)** com:
+   - Descrição da funcionalidade
+   - Como usar/configurar
+   - Exemplos de código se aplicável
+3. **Adicionar entrada no [CHANGELOG.md](mdc:CHANGELOG.md)** na seção "Added"
+4. **Commit seguindo padrão**: `feat: add [functionality]`
+
+### Para Correções (fix:)
+1. **Implementar a correção**
+2. **Atualizar [CHANGELOG.md](mdc:CHANGELOG.md)** na seção "Fixed"
+3. **Atualizar [README.md](mdc:README.md)** se a correção afeta documentação
+4. **Commit seguindo padrão**: `fix: resolve [issue]`
+
+## Formato do CHANGELOG.md
+
+```markdown
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [Unreleased]
+
+### Added
+- New user authentication system
+- Dashboard analytics features
+
+### Changed
+- Updated payment processing flow
+
+### Fixed
+- Resolved login button issue
+- Corrected database timeout errors
+
+## [1.0.0] - 2024-01-15
+
+### Added
+- Initial release
+- User management
+- Basic dashboard
+```
+
+## Seções Obrigatórias no README
+
+### Estrutura Mínima do [README.md](mdc:README.md):
+1. **Título e Descrição**
+2. **Instalação e Setup**
+3. **Funcionalidades Principais**
+4. **Como Usar**
+5. **Configuração**
+6. **Contribuição**
+7. **Licença**
+
+## Verificação antes do Commit
+
+### Checklist obrigatório:
+- [ ] Nova funcionalidade explicada no [README.md](mdc:README.md)?
+- [ ] Mudança documentada no [CHANGELOG.md](mdc:CHANGELOG.md)?
+- [ ] Exemplos atualizados se necessário?
+- [ ] Screenshots/diagramas atualizados se a UI mudou?
+
+## Responsabilidades
+
+### Desenvolvedor:
+- Atualizar documentação junto com o código
+- Não fazer merge sem documentação atualizada
+- Revisar se [README.md](mdc:README.md) está claro e completo
+
+### Code Review:
+- Verificar se documentação foi atualizada
+- Aprovar apenas se README e CHANGELOG estão corretos
+- Questionar funcionalidades não documentadas
+
+## Exceções
+- Refatorações internas sem impacto no usuário podem não precisar de README
+- Correções de bugs internos podem ter documentação simplificada
+- Todas as exceções devem ser justificadas no PR

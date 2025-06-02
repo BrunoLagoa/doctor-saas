@@ -1,0 +1,51 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Padrão de Commits
+
+## Formato Obrigatório
+Cada tarefa deve resultar em exatamente 1 commit com mensagem seguindo o formato:
+
+- `feat: [action]` - para novas funcionalidades
+- `fix: [problem resolved]` - para correções de bugs
+
+## Regras Importantes
+1. **Uma tarefa = Um commit**: Cada funcionalidade ou correção deve ser um commit isolado
+2. **Idioma obrigatório**: Todas as mensagens DEVEM ser em inglês, nunca em português
+3. **Formato padrão**: Sempre usar o prefixo `feat:` ou `fix:` seguido de dois pontos e espaço
+
+## Exemplos Corretos
+```bash
+feat: add user authentication system
+feat: implement payment processing
+feat: create dashboard analytics
+fix: resolve login button not working
+fix: correct database connection timeout
+fix: handle empty form submission
+```
+
+## Exemplos Incorretos
+```bash
+# ❌ Em português
+feat: adicionar sistema de autenticação
+fix: corrigir botão de login
+
+# ❌ Sem prefixo
+add user authentication
+resolve login issue
+
+# ❌ Prefixo incorreto
+add: user authentication
+bugfix: login button
+
+# ❌ Múltiplas funcionalidades em um commit
+feat: add authentication and payment processing
+```
+
+## Aplicação
+- Sempre verificar se a mensagem está em inglês antes de fazer commit
+- Separar funcionalidades diferentes em commits diferentes
+- Manter mensagens concisas mas descritivas
+- Usar verbos no infinitivo sem "to" (add, implement, create, resolve, correct, handle)

@@ -1,0 +1,44 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Implementação Incremental
+
+## Princípio Fundamental
+Sempre implementar uma funcionalidade por vez. Divida prompts grandes e confirme escopo antes de gerar código.
+
+## Diretrizes para Desenvolvimento
+
+### 1. Decomposição de Tarefas
+- Divida funcionalidades complexas em etapas menores e mais gerenciáveis
+- Identifique dependências entre as tarefas
+- Priorize implementações que não quebrem funcionalidades existentes
+
+### 2. Confirmação de Escopo
+- Antes de iniciar qualquer implementação, confirme o escopo com o usuário
+- Esclareça requisitos ambíguos
+- Defina critérios de aceitação claros
+
+### 3. Implementação Progressiva
+- Comece com a funcionalidade básica (MVP)
+- Adicione incrementalmente melhorias e recursos extras
+- Teste cada incremento antes de prosseguir
+
+### 4. Comunicação Clara
+- Explique o que será implementado em cada etapa
+- Solicite feedback após cada incremento
+- Mantenha o usuário informado sobre o progresso
+
+### 5. Manutenção de Qualidade
+- Mantenha padrões de código consistentes
+- Garanta que cada incremento seja totalmente funcional
+- Documente mudanças importantes conforme necessário
+
+## Exemplo de Abordagem
+Ao receber um prompt complexo:
+1. Analise e decomponha a solicitação
+2. Liste as funcionalidades identificadas
+3. Proponha uma ordem de implementação
+4. Aguarde confirmação antes de prosseguir
+5. Implemente uma funcionalidade por vez
