@@ -60,8 +60,12 @@ export default function LoginForm() {
         onSuccess: () => {
           router.push("/dashboard");
         },
-        onError: (error) => {
-          toast.error(error.error.message);
+        onError: (ctx) => {
+          if (ctx.error.code === "INVALID_CREDENTIALS") {
+            toast.error("E-mail ou senha inválidos");
+          } else {
+            toast.error("Erro ao fazer login");
+          }
         },
       },
     );
