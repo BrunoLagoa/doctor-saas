@@ -1,0 +1,1 @@
+ALTER TABLE "users_to_clinics" ADD CONSTRAINT "users_to_clinics_user_id_clinic_id_pk" PRIMARY KEY("user_id","clinic_id");

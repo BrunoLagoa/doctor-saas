@@ -1,12 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -24,14 +21,6 @@ export default function ClinicPage() {
           </DialogDescription>
         </DialogHeader>
         <ClinicForm />
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">Cancelar</Button>
-          </DialogClose>
-          <Button type="submit" form="clinic-form">
-            Criar clínica
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

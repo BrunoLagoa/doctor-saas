@@ -4,6 +4,7 @@ import {
   integer,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uuid,
@@ -69,25 +70,31 @@ export const verificationsTable = pgTable("verifications", {
 
 export const clinicsTable = pgTable("clinics", {
   id: uuid("id").defaultRandom().primaryKey(),
-  name: uuid("name").notNull(),
+  name: text("name").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
     .$onUpdate(() => new Date()),
 });
 
-export const usersToClinicsTable = pgTable("users_to_clinics", {
-  userId: text("user_id")
-    .references(() => usersTable.id, { onDelete: "cascade" })
-    .notNull(),
-  clinicId: uuid("clinic_id")
-    .references(() => clinicsTable.id, { onDelete: "cascade" })
-    .notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-});
+export const usersToClinicsTable = pgTable(
+  "users_to_clinics",
+  {
+    userId: text("user_id")
+      .references(() => usersTable.id, { onDelete: "cascade" })
+      .notNull(),
+    clinicId: uuid("clinic_id")
+      .references(() => clinicsTable.id, { onDelete: "cascade" })
+      .notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.userId, table.clinicId] }),
+  }),
+);
 
 export const usersToClinicsTableRelations = relations(
   usersToClinicsTable,
@@ -112,7 +119,7 @@ export const clinicsTableRelations = relations(clinicsTable, ({ many }) => ({
 
 export const doctorsTable = pgTable("doctors", {
   id: uuid("id").defaultRandom().primaryKey(),
-  name: uuid("name").notNull(),
+  name: text("name").notNull(),
   avatarImageUrl: text("avatar_image_url"),
   // 1 - Monday, 2 - Tuesday, 3 - Wednesday, 4 - Thursday, 5 - Friday, 6 - Saturday, 0 - Sunday
   availableFromWeekDay: text("available_from_week_day").notNull(), // 1
@@ -149,7 +156,7 @@ export const patientsGenderEnum = pgEnum("patients_gender", [
 
 export const patientsTable = pgTable("patients", {
   id: uuid("id").defaultRandom().primaryKey(),
-  name: uuid("name").notNull(),
+  name: text("name").notNull(),
   email: text("email").notNull(),
   phoneNumber: text("phone").notNull(),
   avatarImageUrl: text("avatar_image_url"),
