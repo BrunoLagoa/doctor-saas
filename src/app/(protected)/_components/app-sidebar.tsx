@@ -31,6 +31,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
+import { getInitials } from "@/lib/utils";
 
 const items = [
   {
@@ -103,7 +104,9 @@ export function AppSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton size="lg">
                   <Avatar>
-                    <AvatarFallback>B</AvatarFallback>
+                    <AvatarFallback>
+                      {getInitials(session.data?.user.clinic?.name)}
+                    </AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="text-sm">{session.data?.user.clinic?.name}</p>
