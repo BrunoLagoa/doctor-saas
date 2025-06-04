@@ -1,7 +1,4 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
@@ -41,95 +38,84 @@ import { medicalSpecialties } from "../_constants";
 
 const formSchema = z
   .object({
-    name: z.string().trim().min(1, { message: "Nome é obrigatório" }),
-    specialty: z
-      .string()
-      .trim()
-      .min(1, { message: "Especialidade é obrigatória" }),
-    appointmentPrice: z
-      .number()
-      .min(1, { message: "Preço da consulta é obrigatório" }),
+    name: z.string().trim().min(1, {
+      message: "Nome é obrigatório.",
+    }),
+    specialty: z.string().trim().min(1, {
+      message: "Especialidade é obrigatória.",
+    }),
+    appointmentPrice: z.number().min(1, {
+      message: "Preço da consulta é obrigatório.",
+    }),
     availableFromWeekDay: z.string(),
     availableToWeekDay: z.string(),
-    availableFromTime: z
-      .string()
-      .min(1, { message: "Hora de início é obrigatória" }),
-    availableToTime: z
-      .string()
-      .min(1, { message: "Hora de término é obrigatória" }),
+    availableFromTime: z.string().min(1, {
+      message: "Hora de início é obrigatória.",
+    }),
+    availableToTime: z.string().min(1, {
+      message: "Hora de término é obrigatória.",
+    }),
   })
   .refine(
     (data) => {
       return data.availableFromTime < data.availableToTime;
     },
     {
-      message: "O horário inicial deve ser menor que o horário final",
-      path: ["availableFromTime"],
-    },
-  )
-  .refine(
-    (data) => {
-      return data.availableFromWeekDay <= data.availableToWeekDay;
-    },
-    {
-      message: "O dia inicial deve ser menor ou igual ao dia final",
-      path: ["availableFromWeekDay"],
+      message:
+        "O horário de início não pode ser anterior ao horário de término.",
+      path: ["availableToTime"],
     },
   );
 
-type UpsertDoctorFormProps = {
+interface UpsertDoctorFormProps {
   doctor?: typeof doctorsTable.$inferSelect;
   onSuccess?: () => void;
-};
+}
 
-export default function UpsertDoctorForm({
-  doctor,
-  onSuccess,
-}: UpsertDoctorFormProps) {
+const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     shouldUnregister: true,
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: doctor?.name ?? "",
       specialty: doctor?.specialty ?? "",
-      appointmentPrice: doctor?.appointmentPriceInCents ?? 0,
+      appointmentPrice: doctor?.appointmentPriceInCents
+        ? doctor.appointmentPriceInCents / 100
+        : 0,
       availableFromWeekDay: doctor?.availableFromWeekDay?.toString() ?? "1",
       availableToWeekDay: doctor?.availableToWeekDay?.toString() ?? "5",
       availableFromTime: doctor?.availableFromTime ?? "",
       availableToTime: doctor?.availableToTime ?? "",
     },
   });
-
   const upsertDoctorAction = useAction(upsertDoctor, {
     onSuccess: () => {
-      toast.success("Médico adicionado com sucesso");
+      toast.success("Médico adicionado com sucesso.");
       onSuccess?.();
     },
-    onError: (error) => {
-      toast.error(error.error.serverError ?? "Erro ao adicionar médico");
+    onError: () => {
+      toast.error("Erro ao adicionar médico.");
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
     upsertDoctorAction.execute({
-      ...data,
+      ...values,
       id: doctor?.id,
-      availableFromWeekDay: Number(data.availableFromWeekDay),
-      availableToWeekDay: Number(data.availableToWeekDay),
-      appointmentPriceInCents: data.appointmentPrice * 100,
+      availableFromWeekDay: parseInt(values.availableFromWeekDay),
+      availableToWeekDay: parseInt(values.availableToWeekDay),
+      appointmentPriceInCents: values.appointmentPrice * 100,
     });
   };
 
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>
-          {doctor ? "Editar médico" : "Adicionar médico"}
-        </DialogTitle>
+        <DialogTitle>{doctor ? doctor.name : "Adicionar médico"}</DialogTitle>
         <DialogDescription>
           {doctor
-            ? "Edite as informações do médico"
-            : "Adicione um novo médico ao sistema"}
+            ? "Edite as informações desse médico."
+            : "Adicione um novo médico."}
         </DialogDescription>
       </DialogHeader>
       <Form {...form}>
@@ -147,7 +133,6 @@ export default function UpsertDoctorForm({
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="specialty"
@@ -175,7 +160,6 @@ export default function UpsertDoctorForm({
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="appointmentPrice"
@@ -200,7 +184,6 @@ export default function UpsertDoctorForm({
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="availableFromWeekDay"
@@ -230,7 +213,6 @@ export default function UpsertDoctorForm({
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="availableToWeekDay"
@@ -239,7 +221,7 @@ export default function UpsertDoctorForm({
                 <FormLabel>Dia final de disponibilidade</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  defaultValue={field.value?.toString()}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -260,7 +242,6 @@ export default function UpsertDoctorForm({
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="availableFromTime"
@@ -330,7 +311,6 @@ export default function UpsertDoctorForm({
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="availableToTime"
@@ -400,17 +380,19 @@ export default function UpsertDoctorForm({
               </FormItem>
             )}
           />
-
           <DialogFooter>
             <Button type="submit" disabled={upsertDoctorAction.isPending}>
-              {upsertDoctorAction.isPending && (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              )}
-              {doctor ? "Salvar" : "Adicionar"}
+              {upsertDoctorAction.isPending
+                ? "Salvando..."
+                : doctor
+                  ? "Salvar"
+                  : "Adicionar"}
             </Button>
           </DialogFooter>
         </form>
       </Form>
     </DialogContent>
   );
-}
+};
+
+export default UpsertDoctorForm;
