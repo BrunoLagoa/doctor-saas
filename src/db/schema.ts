@@ -6,6 +6,7 @@ import {
   pgTable,
   primaryKey,
   text,
+  time,
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
@@ -122,10 +123,10 @@ export const doctorsTable = pgTable("doctors", {
   name: text("name").notNull(),
   avatarImageUrl: text("avatar_image_url"),
   // 1 - Monday, 2 - Tuesday, 3 - Wednesday, 4 - Thursday, 5 - Friday, 6 - Saturday, 0 - Sunday
-  availableFromWeekDay: text("available_from_week_day").notNull(), // 1
-  availableToWeekDay: text("available_to_week_day").notNull(), // 5
-  availableFromTime: text("available_from_time").notNull(), // 9:00
-  availableToTime: text("available_to_time").notNull(), // 17:00
+  availableFromWeekDay: integer("available_from_week_day").notNull(), // 1
+  availableToWeekDay: integer("available_to_week_day").notNull(), // 5
+  availableFromTime: time("available_from_time").notNull(), // 09:00
+  availableToTime: time("available_to_time").notNull(), // 17:00
   appointmentPriceInCents: integer("appointment_price_in_cents").notNull(), // 1500
   specialty: text("specialty").notNull(),
   clinicId: uuid("clinic_id")

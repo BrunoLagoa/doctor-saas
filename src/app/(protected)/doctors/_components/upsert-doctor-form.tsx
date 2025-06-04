@@ -1,10 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
+import { toast } from "sonner";
 import { z } from "zod";
 
+import { upsertDoctor } from "@/actions/upsert-doctor";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -63,15 +67,6 @@ const formSchema = z
   )
   .refine(
     (data) => {
-      return data.availableFromTime < data.availableToTime;
-    },
-    {
-      message: "O horário final deve ser maior que o horário inicial",
-      path: ["availableToTime"],
-    },
-  )
-  .refine(
-    (data) => {
       return data.availableFromWeekDay <= data.availableToWeekDay;
     },
     {
@@ -80,7 +75,11 @@ const formSchema = z
     },
   );
 
-export default function UpsertDoctorForm() {
+type UpsertDoctorFormProps = {
+  onSuccess?: () => void;
+};
+
+export default function UpsertDoctorForm({ onSuccess }: UpsertDoctorFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -94,8 +93,23 @@ export default function UpsertDoctorForm() {
     },
   });
 
+  const upsertDoctorAction = useAction(upsertDoctor, {
+    onSuccess: () => {
+      toast.success("Médico adicionado com sucesso");
+      onSuccess?.();
+    },
+    onError: (error) => {
+      toast.error(error.error.serverError ?? "Erro ao adicionar médico");
+    },
+  });
+
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+    upsertDoctorAction.execute({
+      ...data,
+      availableFromWeekDay: Number(data.availableFromWeekDay),
+      availableToWeekDay: Number(data.availableToWeekDay),
+      appointmentPriceInCents: data.appointmentPrice * 100,
+    });
   };
 
   return (
@@ -373,7 +387,13 @@ export default function UpsertDoctorForm() {
           />
 
           <DialogFooter>
-            <Button type="submit">Adicionar médico</Button>
+            <Button type="submit" disabled={upsertDoctorAction.isPending}>
+              {upsertDoctorAction.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                "Adicionar médico"
+              )}
+            </Button>
           </DialogFooter>
         </form>
       </Form>
