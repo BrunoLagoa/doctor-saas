@@ -2,6 +2,7 @@
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import z from "zod";
 
@@ -102,4 +103,5 @@ export const upsertDoctor = actionClient
           availableToTime: availableToTimeUTC.format("HH:mm:ss"),
         },
       });
+    revalidatePath("/doctors");
   });

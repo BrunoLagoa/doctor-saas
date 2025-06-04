@@ -388,11 +388,10 @@ export default function UpsertDoctorForm({ onSuccess }: UpsertDoctorFormProps) {
 
           <DialogFooter>
             <Button type="submit" disabled={upsertDoctorAction.isPending}>
-              {upsertDoctorAction.isPending ? (
+              {upsertDoctorAction.isPending && (
                 <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                "Adicionar médico"
               )}
+              Adicionar médico
             </Button>
           </DialogFooter>
         </form>
