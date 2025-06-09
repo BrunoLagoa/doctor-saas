@@ -20,6 +20,7 @@ export default function AddDoctorButton() {
         </Button>
       </DialogTrigger>
       <UpsertDoctorForm
+        isOpen={isOpen}
         onSuccess={() => {
           setIsOpen(false);
         }}

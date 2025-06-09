@@ -87,12 +87,15 @@ const UpsertPatientForm = ({
       toast.error("Erro ao salvar paciente.");
     },
   });
+
+  const transformPatientData = (values: z.infer<typeof formSchema>) => ({
+    ...values,
+    gender: values.gender === "other" ? "male" : values.gender,
+    id: patient?.id,
+  });
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    upsertPatientAction.execute({
-      ...values,
-      gender: values.gender === "other" ? "male" : values.gender,
-      id: patient?.id,
-    });
+    upsertPatientAction.execute(transformPatientData(values));
   };
 
   return (

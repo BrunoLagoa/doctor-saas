@@ -32,7 +32,6 @@ const PatientCard = ({ patient }: PatientCardProps) => {
     .join("");
 
   const formatPhoneNumber = (phone: string) => {
-    // Remove all non-numeric characters
     const cleaned = phone.replace(/\D/g, "");
     // Format as (XX) XXXXX-XXXX
     if (cleaned.length === 11) {
