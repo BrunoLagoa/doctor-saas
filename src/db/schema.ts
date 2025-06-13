@@ -181,6 +181,7 @@ export const patientsTableRelations = relations(patientsTable, ({ one }) => ({
 export const appointmentsTable = pgTable("appointments", {
   id: uuid("id").defaultRandom().primaryKey(),
   date: timestamp("date").notNull(),
+  appointmentPriceInCents: integer("appointment_price_in_cents").notNull(),
   doctorId: uuid("doctor_id")
     .references(() => doctorsTable.id, { onDelete: "cascade" })
     .notNull(),
