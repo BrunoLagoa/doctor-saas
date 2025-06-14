@@ -17,43 +17,61 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export const getAvailableTimes = actionClient
-  .schema(
+  .inputSchema(
     z.object({
       doctorId: z.string(),
       date: z.string().date(), // YYYY-MM-DD,
     }),
   )
+  .outputSchema(
+    z.array(
+      z.object({
+        value: z.string(),
+        available: z.boolean(),
+        label: z.string(),
+      }),
+    ),
+  )
   .action(async ({ parsedInput }) => {
     const session = await auth.api.getSession({
       headers: await headers(),
     });
+
     if (!session) {
       throw new Error("Unauthorized");
     }
+
     if (!session.user.clinic) {
       throw new Error("Clínica não encontrada");
     }
+
     const doctor = await db.query.doctorsTable.findFirst({
       where: eq(doctorsTable.id, parsedInput.doctorId),
     });
+
     if (!doctor) {
       throw new Error("Médico não encontrado");
     }
+
     const selectedDayOfWeek = dayjs(parsedInput.date).day();
     const doctorIsAvailable =
       selectedDayOfWeek >= doctor.availableFromWeekDay &&
       selectedDayOfWeek <= doctor.availableToWeekDay;
+
     if (!doctorIsAvailable) {
       return [];
     }
+
     const appointments = await db.query.appointmentsTable.findMany({
       where: eq(appointmentsTable.doctorId, parsedInput.doctorId),
     });
+
     const appointmentsOnSelectedDate = appointments
       .filter((appointment) => {
         return dayjs(appointment.date).isSame(parsedInput.date, "day");
       })
       .map((appointment) => dayjs(appointment.date).format("HH:mm:ss"));
+
     const timeSlots = generateTimeSlots();
 
     const doctorAvailableFrom = dayjs()
@@ -80,6 +98,7 @@ export const getAvailableTimes = actionClient
         date.format("HH:mm:ss") <= doctorAvailableTo.format("HH:mm:ss")
       );
     });
+
     return doctorTimeSlots.map((time) => {
       return {
         value: time,
