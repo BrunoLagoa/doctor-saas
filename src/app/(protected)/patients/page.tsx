@@ -34,7 +34,7 @@ export default async function PatientsPage() {
 
   const patients = await db.query.patientsTable.findMany({
     where: eq(patientsTable.clinicId, session.user.clinic.id),
-    orderBy: [asc(patientsTable.createdAt)],
+    orderBy: asc(patientsTable.createdAt),
   });
 
   return (
