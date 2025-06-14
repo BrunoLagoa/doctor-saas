@@ -65,7 +65,7 @@ const AppointmentsPage = async () => {
             ...appointment,
             patient: {
               ...appointment.patient,
-              sex:
+              gender:
                 appointment.patient.gender === "other"
                   ? "male"
                   : appointment.patient.gender,

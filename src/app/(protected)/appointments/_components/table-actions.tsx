@@ -33,7 +33,7 @@ type AppointmentWithRelations = typeof appointmentsTable.$inferSelect & {
     name: string;
     email: string;
     phoneNumber: string;
-    sex: "male" | "female";
+    gender: "male" | "female";
   };
   doctor: {
     id: string;
