@@ -66,21 +66,19 @@ export default function TopSpecialties({
               (specialty.appointments / maxAppointments) * 100;
 
             return (
-              <div
-                key={specialty.specialty}
-                className="flex items-center gap-2"
-              >
-                <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-full">
+              <div key={specialty.specialty} className="flex items-start gap-3">
+                <div className="bg-primary/10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
                   <Icon className="text-primary h-5 w-5" />
                 </div>
-                <div className="flex w-full flex-col justify-center">
-                  <div className="flex w-full justify-between">
-                    <h3 className="text-sm">{specialty.specialty}</h3>
-                    <div className="text-right">
-                      <span className="text-muted-foreground text-sm font-medium">
-                        {specialty.appointments} agend.
-                      </span>
-                    </div>
+                <div className="flex min-w-0 flex-1 flex-col justify-center">
+                  <div className="mb-1 flex flex-col gap-1 xl:flex-row xl:items-center xl:justify-between">
+                    <h3 className="truncate text-sm font-medium">
+                      {specialty.specialty}
+                    </h3>
+                    <span className="text-muted-foreground text-xs font-medium xl:text-sm">
+                      {specialty.appointments} agendamento
+                      {specialty.appointments !== 1 ? "s" : ""}
+                    </span>
                   </div>
                   <Progress value={progressValue} className="w-full" />
                 </div>
