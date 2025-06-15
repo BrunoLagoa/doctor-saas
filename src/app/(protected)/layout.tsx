@@ -10,7 +10,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
       <AppSidebar />
       <main className="w-full">
         <SidebarTrigger />
-        {children}
+        <div className="mx-auto max-w-7xl">{children}</div>
       </main>
     </SidebarProvider>
   );
