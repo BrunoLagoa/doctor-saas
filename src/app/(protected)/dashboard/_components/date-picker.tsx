@@ -31,17 +31,17 @@ export default function DatePicker({
   );
 
   const date = {
-    from,
-    to,
+    from: from && dayjs(from).isValid() ? from : undefined,
+    to: to && dayjs(to).isValid() ? to : undefined,
   };
 
   const handleDateChange = (date: DateRange | undefined) => {
     if (date?.from) {
-      setFrom(date.from);
+      setFrom(date.from, { shallow: false });
     }
 
     if (date?.to) {
-      setTo(date.to);
+      setTo(date.to, { shallow: false });
     }
   };
 
@@ -61,11 +61,18 @@ export default function DatePicker({
             {date?.from ? (
               date.to ? (
                 <>
-                  {dayjs(date.from).format("DD/MM/YYYY")} -{" "}
-                  {dayjs(date.to).format("DD/MM/YYYY")}
+                  {from && dayjs(from).isValid()
+                    ? dayjs(from).format("DD/MM/YYYY")
+                    : ""}{" "}
+                  -{" "}
+                  {to && dayjs(to).isValid()
+                    ? dayjs(to).format("DD/MM/YYYY")
+                    : ""}
                 </>
+              ) : from && dayjs(from).isValid() ? (
+                dayjs(from).format("DD/MM/YYYY")
               ) : (
-                dayjs(date.from).format("LLL dd, y")
+                ""
               )
             ) : (
               <span>Selecione uma data</span>
