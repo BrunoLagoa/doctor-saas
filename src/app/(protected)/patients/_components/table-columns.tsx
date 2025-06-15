@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import { patientsTable } from "@/db/schema";
+import { getGenderLabel } from "@/lib/utils";
 
 import PatientsTableActions from "./table-actions";
 
@@ -41,7 +42,7 @@ export const patientsTableColumns: ColumnDef<Patient>[] = [
     header: "Gênero",
     cell: (params) => {
       const patient = params.row.original;
-      return patient.gender === "male" ? "Masculino" : "Feminino";
+      return getGenderLabel(patient.gender);
     },
   },
   {

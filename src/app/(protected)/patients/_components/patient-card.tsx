@@ -14,7 +14,8 @@ import {
 } from "@/components/ui/card";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { patientsGenderEnum, patientsTable } from "@/db/schema";
+import { patientsTable } from "@/db/schema";
+import { getGenderLabel } from "@/lib/utils";
 
 import UpsertPatientForm from "./upsert-patient-form";
 
@@ -38,16 +39,6 @@ const PatientCard = ({ patient }: PatientCardProps) => {
       return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 7)}-${cleaned.slice(7)}`;
     }
     return phone;
-  };
-
-  const getGenderLabel = (
-    gender: (typeof patientsGenderEnum.enumValues)[number],
-  ) => {
-    return gender === "male"
-      ? "Masculino"
-      : gender === "female"
-        ? "Feminino"
-        : "Outro";
   };
 
   return (

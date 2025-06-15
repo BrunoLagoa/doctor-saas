@@ -46,7 +46,7 @@ const formSchema = z.object({
     message: "Número de telefone é obrigatório.",
   }),
   gender: z.enum(patientsGenderEnum.enumValues, {
-    required_error: "Sexo é obrigatório.",
+    required_error: "Gênero é obrigatório.",
   }),
 });
 
@@ -68,7 +68,7 @@ const UpsertPatientForm = ({
       name: patient?.name ?? "",
       email: patient?.email ?? "",
       phoneNumber: patient?.phoneNumber ?? "",
-      gender: patient?.gender ?? "other",
+      gender: patient?.gender,
     },
   });
 
@@ -90,7 +90,6 @@ const UpsertPatientForm = ({
 
   const transformPatientData = (values: z.infer<typeof formSchema>) => ({
     ...values,
-    gender: values.gender === "other" ? "male" : values.gender,
     id: patient?.id,
   });
 
@@ -172,19 +171,20 @@ const UpsertPatientForm = ({
             name="gender"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Sexo</FormLabel>
+                <FormLabel>Gênero</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Selecione o sexo" />
+                      <SelectValue placeholder="Selecione o gênero" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="male">Masculino</SelectItem>
                     <SelectItem value="female">Feminino</SelectItem>
+                    <SelectItem value="other">Outro</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
