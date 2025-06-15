@@ -1,8 +1,8 @@
-import { addMonths } from "date-fns";
-import { and, count, eq, gte, lte, sum } from "drizzle-orm";
+import dayjs from "dayjs";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { getDashboard } from "@/app/data/get-dashboard";
 import {
   PageContainer,
   PageContent,
@@ -12,12 +12,12 @@ import {
   PageHeaderDescription,
   PageHeaderTitle,
 } from "@/components/ui/page-container";
-import { db } from "@/db";
-import { appointmentsTable, doctorsTable, patientsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
+import AppointmentsChart from "./_components/appointments-chart";
 import DatePicker from "./_components/date-picker";
 import StatsCards from "./_components/stats-cards";
+import TopDoctors from "./_components/top-doctors";
 
 interface DashboardPageProps {
   searchParams: Promise<{
@@ -43,52 +43,30 @@ export default async function DashboardPage({
 
   const { from, to } = await searchParams;
 
-  // Validar e definir datas padrão
-  const fromDate =
-    from && !isNaN(Date.parse(from)) ? new Date(from) : new Date(); // Data atual como padrão
+  if (!from || !to) {
+    redirect(
+      `/dashboard?from=${dayjs().format("YYYY-MM-DD")}&to=${dayjs().add(1, "month").format("YYYY-MM-DD")}`,
+    );
+  }
 
-  const toDate =
-    to && !isNaN(Date.parse(to)) ? new Date(to) : addMonths(new Date(), 1); // 1 mês no futuro como padrão
-
-  const [[totalRevenue], [totalAppointments], [totalPatients], [totalDoctors]] =
-    await Promise.all([
-      db
-        .select({
-          total: sum(appointmentsTable.appointmentPriceInCents),
-        })
-        .from(appointmentsTable)
-        .where(
-          and(
-            eq(appointmentsTable.clinicId, session.user.clinic.id),
-            gte(appointmentsTable.date, fromDate),
-            lte(appointmentsTable.date, toDate),
-          ),
-        ),
-      db
-        .select({
-          total: count(),
-        })
-        .from(appointmentsTable)
-        .where(
-          and(
-            eq(appointmentsTable.clinicId, session.user.clinic.id),
-            gte(appointmentsTable.date, fromDate),
-            lte(appointmentsTable.date, toDate),
-          ),
-        ),
-      db
-        .select({
-          total: count(),
-        })
-        .from(patientsTable)
-        .where(and(eq(patientsTable.clinicId, session.user.clinic.id))),
-      db
-        .select({
-          total: count(),
-        })
-        .from(doctorsTable)
-        .where(and(eq(doctorsTable.clinicId, session.user.clinic.id))),
-    ]);
+  const {
+    totalRevenue,
+    totalAppointments,
+    totalPatients,
+    totalDoctors,
+    topDoctors,
+    dailyAppointmentsData,
+  } = await getDashboard({
+    from,
+    to,
+    session: {
+      user: {
+        clinic: {
+          id: session.user.clinic.id,
+        },
+      },
+    },
+  });
 
   return (
     <PageContainer>
@@ -110,6 +88,10 @@ export default async function DashboardPage({
           totalPatients={totalPatients.total}
           totalDoctors={totalDoctors.total}
         />
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[2.25fr_1fr]">
+          <AppointmentsChart dailyAppointmentsData={dailyAppointmentsData} />
+          <TopDoctors doctors={topDoctors} />
+        </div>
       </PageContent>
     </PageContainer>
   );
