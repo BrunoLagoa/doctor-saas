@@ -1,10 +1,18 @@
 import { headers } from "next/headers";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 
+import {
+  PageContainer,
+  PageContent,
+  PageHeader,
+  PageHeaderActions,
+  PageHeaderContent,
+  PageHeaderDescription,
+  PageHeaderTitle,
+} from "@/components/ui/page-container";
 import { auth } from "@/lib/auth";
 
-import SignOutButton from "./_components/sign-out-button";
+import DatePicker from "./_components/date-picker";
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({
@@ -20,15 +28,21 @@ export default async function DashboardPage() {
   }
 
   return (
-    <>
-      <div>Dashboard</div>
-      <h1>{session?.user.name}</h1>
-      <p>{session?.user.email}</p>
-      {session?.user.image && (
-        <Image src={session?.user.image} alt="User" width={32} height={32} />
-      )}
-
-      <SignOutButton />
-    </>
+    <PageContainer>
+      <PageHeader>
+        <PageHeaderContent>
+          <PageHeaderTitle>Pacientes</PageHeaderTitle>
+          <PageHeaderDescription>
+            Gerencie os pacientes cadastrados no sistema.
+          </PageHeaderDescription>
+        </PageHeaderContent>
+        <PageHeaderActions>
+          <DatePicker />
+        </PageHeaderActions>
+      </PageHeader>
+      <PageContent>
+        <></>
+      </PageContent>
+    </PageContainer>
   );
 }
