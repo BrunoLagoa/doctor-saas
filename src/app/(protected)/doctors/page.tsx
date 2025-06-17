@@ -23,14 +23,16 @@ export default async function DoctorsPage() {
     headers: await headers(),
   });
 
-  console.log(session);
-
   if (!session?.user) {
     redirect("/authentication");
   }
 
   if (!session.user?.clinic) {
     redirect("/clinic-form");
+  }
+
+  if (!session.user.plan) {
+    redirect("/new-subscription");
   }
 
   const doctors = await db.query.doctorsTable.findMany({
