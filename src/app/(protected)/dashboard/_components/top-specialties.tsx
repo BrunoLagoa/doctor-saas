@@ -45,9 +45,11 @@ const getSpecialtyIcon = (specialty: string) => {
 export default function TopSpecialties({
   topSpecialties,
 }: TopSpecialtiesProps) {
-  const maxAppointments = Math.max(
-    ...topSpecialties.map((i) => i.appointments),
-  );
+  const maxAppointments =
+    topSpecialties.length > 0
+      ? Math.max(...topSpecialties.map((i) => i.appointments))
+      : 0;
+
   return (
     <Card className="mx-auto w-full">
       <CardContent>
@@ -58,34 +60,50 @@ export default function TopSpecialties({
           </div>
         </div>
 
-        <div className="space-y-6">
-          {topSpecialties.map((specialty) => {
-            const Icon = getSpecialtyIcon(specialty.specialty);
-            // Porcentagem de ocupação da especialidade baseando-se no maior número de agendamentos
-            const progressValue =
-              (specialty.appointments / maxAppointments) * 100;
+        {!topSpecialties.length && (
+          <div className="flex flex-col items-center justify-center text-center">
+            <h3 className="mb-2 text-sm font-medium text-gray-900">
+              Nenhuma especialidade encontrada
+            </h3>
+            <p className="text-xs text-gray-500">
+              Cadastre médicos com especialidades para visualizar os dados
+            </p>
+          </div>
+        )}
 
-            return (
-              <div key={specialty.specialty} className="flex items-start gap-3">
-                <div className="bg-primary/10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
-                  <Icon className="text-primary h-5 w-5" />
-                </div>
-                <div className="flex min-w-0 flex-1 flex-col justify-center">
-                  <div className="mb-1 flex flex-col gap-1 xl:flex-row xl:items-center xl:justify-between">
-                    <h3 className="truncate text-sm font-medium">
-                      {specialty.specialty}
-                    </h3>
-                    <span className="text-muted-foreground text-xs font-medium xl:text-sm">
-                      {specialty.appointments} agendamento
-                      {specialty.appointments !== 1 ? "s" : ""}
-                    </span>
+        {!!topSpecialties.length && (
+          <div className="space-y-6">
+            {topSpecialties.map((specialty) => {
+              const Icon = getSpecialtyIcon(specialty.specialty);
+              // Porcentagem de ocupação da especialidade baseando-se no maior número de agendamentos
+              const progressValue =
+                (specialty.appointments / maxAppointments) * 100;
+
+              return (
+                <div
+                  key={specialty.specialty}
+                  className="flex items-start gap-3"
+                >
+                  <div className="bg-primary/10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+                    <Icon className="text-primary h-5 w-5" />
                   </div>
-                  <Progress value={progressValue} className="w-full" />
+                  <div className="flex min-w-0 flex-1 flex-col justify-center">
+                    <div className="mb-1 flex flex-col gap-1 xl:flex-row xl:items-center xl:justify-between">
+                      <h3 className="truncate text-sm font-medium">
+                        {specialty.specialty}
+                      </h3>
+                      <span className="text-muted-foreground text-xs font-medium xl:text-sm">
+                        {specialty.appointments} agendamento
+                        {specialty.appointments !== 1 ? "s" : ""}
+                      </span>
+                    </div>
+                    <Progress value={progressValue} className="w-full" />
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

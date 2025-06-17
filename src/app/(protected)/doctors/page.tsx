@@ -17,6 +17,7 @@ import { auth } from "@/lib/auth";
 
 import AddDoctorButton from "./_components/add-doctor-button";
 import DoctorCard from "./_components/doctor-card";
+import EmptyState from "./_components/empty-state";
 
 export default async function DoctorsPage() {
   const session = await auth.api.getSession({
@@ -54,6 +55,7 @@ export default async function DoctorsPage() {
         </PageHeaderActions>
       </PageHeader>
       <PageContent>
+        {!doctors.length && <EmptyState />}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
           {doctors.map((doctor) => (
             <DoctorCard key={doctor.id} doctor={doctor} />
