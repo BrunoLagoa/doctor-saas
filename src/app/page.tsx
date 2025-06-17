@@ -336,7 +336,7 @@ export default function Home() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white px-8 py-4 text-lg text-white hover:bg-white/10"
+                className="text-secondary bg-transparent px-8 py-4 text-lg hover:bg-white/10"
               >
                 Falar com Especialista
               </Button>
