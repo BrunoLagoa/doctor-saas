@@ -140,7 +140,7 @@ export function AppSidebar() {
                   </div>
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent className="w-64">
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut />
                   Sair
