@@ -356,7 +356,8 @@ export default function Home() {
               <span className="text-xl font-bold text-white">Doctor SaaS</span>
             </div>
             <p className="text-center md:text-right">
-              © 2024 Doctor SaaS. Transformando a gestão médica.
+              © {new Date().getFullYear()} Doctor SaaS. Transformando a gestão
+              médica.
             </p>
           </div>
         </div>
